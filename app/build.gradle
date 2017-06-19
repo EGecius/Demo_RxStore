@@ -27,4 +27,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     testCompile 'junit:junit:4.12'
+
+    compile 'au.com.gridstone.rxstore:rxstore:6.0.0'
+    compile	'au.com.gridstone.rxstore:rxstore-kotlin:6.0.0'
+
 }
