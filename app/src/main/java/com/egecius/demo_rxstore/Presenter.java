@@ -1,6 +1,9 @@
 package com.egecius.demo_rxstore;
 
 
+import android.os.Environment;
+import android.util.Log;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -19,8 +22,12 @@ import io.reactivex.schedulers.Schedulers;
 public class Presenter {
 
 	private final Converter converter = new MoshiConverter();
-	private final ValueStore<Person> personStore = RxStore.value(new File("person"), converter, Person.class);
-	private final ListStore<Person> peopleStore = RxStore.list(new File("people"), converter, Person.class);
+	private final File filePerson = new File(Environment.getExternalStorageDirectory() + "/" + "person");
+	private final ValueStore<Person> personStore = RxStore.value(filePerson, converter,
+			Person.class);
+	private final File filePeople = new File(Environment.getExternalStorageDirectory() + "/" + "people");
+	private final ListStore<Person> peopleStore = RxStore.list(filePeople, converter,
+			Person.class);
 
 
 	public Presenter() {
@@ -48,6 +55,7 @@ public class Presenter {
 					@Override
 					public void accept(@NonNull final Object person) throws Exception {
 						// Here we receive a new person every time the store updates.
+						Log.i("Eg:Presenter:51", "accept person " + person);
 					}
 				});
 
@@ -56,6 +64,7 @@ public class Presenter {
 			@Override
 			public void accept(@NonNull final List<Person> people) throws Exception {
 				// Now we'll be informed every time our list of people updates.
+				Log.i("Eg:Presenter:62", "accept people " + people);
 			}
 		});
 	}
@@ -74,6 +83,7 @@ public class Presenter {
 			@Override
 			public void accept(@NonNull final Person person) throws Exception {
 				// In the onSuccess callback we now have a persisted model object to work with.
+				Log.i("Eg:Presenter:81", "accept person " + person);
 			}
 		});
 
@@ -100,17 +110,19 @@ public class Presenter {
 		peopleStore.clear(Schedulers.trampoline());
 	}
 
-	public void remove() {
-		// Let's remove Edward from our ListStore and observe the operation.
+	public void remove(final String name) {
+		// Let's remove a person (say, Edward) with this name from our ListStore and observe the
+		// operation.
 		peopleStore.observeRemove(new ListStore.PredicateFunc<Person>() {
 			@Override
 			public boolean test(@NonNull final Person person) {
-				return person.name.contains("Edward");
+				return person.name.contains(name);
 			}
 		}).subscribe(new Consumer<List<Person>>() {
 			@Override
 			public void accept(@NonNull final List<Person> people) throws Exception {
 				// Now we have a list of people without Edward.
+				Log.i("Eg:Presenter:119", "accept people " + people);
 			}
 		});
 	}
