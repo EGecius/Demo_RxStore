@@ -30,5 +30,6 @@ dependencies {
 
     compile 'au.com.gridstone.rxstore:rxstore:6.0.0'
     compile	'au.com.gridstone.rxstore:rxstore-kotlin:6.0.0'
+    compile 'au.com.gridstone.rxstore:converter-moshi:6.0.0'
 
 }
